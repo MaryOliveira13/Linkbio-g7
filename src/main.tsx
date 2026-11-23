@@ -1,6 +1,6 @@
 import { useRef, useState, type CSSProperties } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight, MessageCircle, Play, Video, X, Zap } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight, MessageCircle, Play, Video, X } from 'lucide-react';
 import { config, whatsappLink } from './config';
 import { Location } from './expanded-map';
 import './style.css';
@@ -122,7 +122,7 @@ function App() {
               <img className="hero-scooter" src={config.hero} width="317" height="480" alt="Scooter elétrica branca do catálogo G7, vista em três quartos" fetchPriority="high" />
             </div>
             <div className="hero-copy">
-              <h1 id="hero-title">G7 <em>Scooters</em></h1>
+              <h1 id="hero-title"><span>G7</span> <em>Scooters</em></h1>
               <p>Scooters elétricas em Cedral, SP</p>
             </div>
           </div>
@@ -132,14 +132,16 @@ function App() {
           <div className="curtain" aria-hidden="true" />
           <div className="wrap">
             <div className="links-heading">
-              <p className="kicker"><Zap size={15} /> Links da G7</p>
-              <h2 id="links-title">Escolha seu caminho.</h2>
+              <h2 id="links-title">Explore a G7.</h2>
             </div>
             <div className="cards">
               {cards.map((card) => (
                 <a className={`action-card ${card.style}`} key={card.style} href={card.url} target="_blank" rel="noreferrer">
                   <div className="card-copy"><span>{card.hint}</span><h3>{card.title}</h3></div>
-                  <img src={card.image} width="340" height="300" alt="" loading="lazy" />
+                  <div className="card-art" aria-hidden="true">
+                    <span className="card-platform" />
+                    <img src={card.image} width="340" height="300" alt="" loading="lazy" />
+                  </div>
                   <span className="card-arrow" aria-hidden="true">{card.style === 'chat' ? <MessageCircle size={16} /> : <ArrowUpRight size={17} />}</span>
                 </a>
               ))}
