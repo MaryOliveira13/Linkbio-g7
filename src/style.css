@@ -222,15 +222,6 @@ dialog::backdrop{background:#000b}
 }
 
 @media(prefers-reduced-motion:no-preference){
-  main[data-scroll-scenes]{isolation:isolate}
-  main[data-scroll-scenes] .hero{z-index:2;clip-path:inset(0 0 var(--curtain-cut,0px))}
-  main[data-scroll-scenes] .hero::after{content:"";position:absolute;z-index:3;inset:auto 0 var(--curtain-cut,0px);height:2px;background:linear-gradient(90deg,transparent,#c8ed76a6 50%,transparent);opacity:var(--curtain-rim,0);pointer-events:none}
-  main[data-scroll-scenes] .hero:has(:focus-visible){clip-path:none}
-  main[data-scroll-scenes] .hero:has(:focus-visible)::after,
-  main[data-scroll-scenes]:has(.links-section :focus-visible) .hero::after{opacity:0}
-  main[data-scroll-scenes] .links-section{margin-top:calc(-1 * var(--curtain-overlap,0px));z-index:1;transform:translateY(var(--curtain-drift,0px))}
-  main[data-scroll-scenes] .links-section:has(:focus-visible){transform:none}
-  main[data-scroll-scenes]:has(.links-section :focus-visible) .hero{clip-path:inset(0 0 var(--curtain-overlap,0px))}
   main[data-scroll-scenes] .location{overflow:clip}
   main[data-scroll-scenes] .map-shell{transform:translateY(var(--panel-offset,0px))}
 }
