@@ -62,6 +62,7 @@ export function Location() {
                 <div className="map-shade" aria-hidden="true" />
                 <button className="map-pin" aria-label="Detalhes da unidade G7 Scooters" aria-expanded={details} aria-controls="store-details" onClick={() => setDetails(!details)}>
                   <img src={config.logo} width="44" height="44" alt="" />
+                  <span aria-hidden="true">G7 Scooters</span>
                 </button>
                 <div className="store-details" id="store-details" hidden={!details}>
                   <strong>{config.name}</strong>
@@ -73,6 +74,7 @@ export function Location() {
             {!interactive && !store.facade && <a className="attribution" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>}
           </div>
           {expanded && <div className="map-actions">
+            <a href={store.listing} target="_blank" rel="noreferrer">Ver loja no Google Maps</a>
             <button type="button" aria-pressed={interactive} onClick={() => {
               resetPointer();
               setDetails(false);

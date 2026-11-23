@@ -28,6 +28,7 @@ export const config = {
     saturday: 'Sábado, 9h às 12h',
     mapImage: '/media/cedral.webp',
     facade: '',
+    listing: `https://www.google.com/maps/search/?api=1&query=G7+Scooters+Cedral+SP&query_place_id=${place}`,
     directions: `https://www.google.com/maps/dir/?api=1&destination=G7+Scooters+Cedral+SP&destination_place_id=${place}`,
     embed: 'https://maps.google.com/maps?q=G7%20Scooters%2C%20Cedral%20SP&output=embed',
   },
