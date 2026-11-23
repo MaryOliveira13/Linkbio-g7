@@ -192,7 +192,7 @@ dialog::backdrop{background:#000b}
 .action-card.service{background:radial-gradient(ellipse at 51% 43%,#695944,#342d25 69%,#24201a)}
 .action-card.chat{background:radial-gradient(ellipse at 53% 42%,#3c8050,#20432e 65%,#162e22)}
 .action-card::after{display:none}
-.card-art{position:relative;grid-row:1;grid-column:1;isolation:isolate;overflow:hidden}
+.card-art{position:relative;grid-row:1;grid-column:1;align-self:stretch;isolation:isolate;overflow:hidden}
 .action-card .card-art img{z-index:1;inset:7% 12% auto;width:76%;height:90%;object-fit:contain;object-position:center;filter:drop-shadow(2px 15px 12px #060a06d9)}
 .card-platform{position:absolute;bottom:8%;left:15%;width:70%;height:19%;border-radius:50%;background:linear-gradient(#d7f5b443,#17261873);box-shadow:0 10px 0 #0b160e96,0 16px 18px #06080679;border:1px solid #eaffbf36}
 .card-copy{grid-row:2;grid-column:1;max-width:none;padding:17px 22px 20px;background:#0b110de3;border-top:1px solid #eaffbf25}
