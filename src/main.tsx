@@ -1,7 +1,8 @@
-import { useRef, useState, type PointerEvent } from 'react';
+import { useRef, useState, type CSSProperties } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight, Clock3, MapPin, MessageCircle, Navigation, Play, Video, X, Zap } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight, MessageCircle, Play, Video, X, Zap } from 'lucide-react';
 import { config, whatsappLink } from './config';
+import { Location } from './expanded-map';
 import './style.css';
 
 const cards = [
@@ -10,70 +11,15 @@ const cards = [
   { title: 'Falar no WhatsApp', hint: 'Atendimento', image: '/media/chat.webp', url: whatsappLink(config.contactMessage), style: 'chat' },
 ];
 
-function Location() {
-  const [showDetails, setShowDetails] = useState(false);
-  const [showMap, setShowMap] = useState(false);
-  const [tilt, setTilt] = useState(0);
-  const drag = useRef<{ x: number; tilt: number } | null>(null);
-  const { store } = config;
-
-  function move(event: PointerEvent<HTMLDivElement>) {
-    if (!drag.current || !event.currentTarget.hasPointerCapture(event.pointerId)) return;
-    const delta = (event.clientX - drag.current.x) / 12;
-    setTilt(Math.max(-13, Math.min(13, drag.current.tilt + delta)));
-  }
-
-  return (
-    <section className="location" id="localizacao" aria-labelledby="location-title">
-      <div className="location-layout wrap">
-        <div className="location-copy">
-          <p className="kicker"><MapPin size={15} /> Nossa loja</p>
-          <h2 id="location-title">Visite a G7<br /> em <em>Cedral.</em></h2>
-          <address>{store.street}<br />{store.city} · CEP {store.postalCode}</address>
-          <p className="hours"><Clock3 size={17} /> <span>{store.weekdays}<br />{store.saturday}</span></p>
-          <a className="directions" href={store.directions} target="_blank" rel="noreferrer"><Navigation size={17} /> Como chegar</a>
-        </div>
-        <div className="map-shell">
-          <div className="map-top"><span><MapPin size={15} /> Cedral, SP</span><button type="button" aria-expanded={showMap} aria-controls="map-scene" onClick={() => setShowMap(!showMap)}>{showMap ? 'Voltar à vista da loja' : 'Abrir mapa interativo'}</button></div>
-          <div className="map-scene" id="map-scene">
-            {showMap ? <iframe title="G7 Scooters no Google Maps" src={store.embed} loading="lazy" allowFullScreen referrerPolicy="no-referrer-when-downgrade" /> :
-              <>
-                <div className="map-surface" aria-hidden="true"
-                  style={{ transform: `perspective(700px) rotateY(${tilt}deg) scale(1.025)` }}
-                  onPointerDown={(event) => {
-                    if (event.button !== 0 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-                    drag.current = { x: event.clientX, tilt };
-                    event.currentTarget.setPointerCapture(event.pointerId);
-                  }}
-                  onPointerMove={move}
-                  onLostPointerCapture={() => { drag.current = null; }}>
-                  <img src={store.facade || store.mapImage} width="760" height="390" loading="lazy" draggable="false" alt="" />
-                </div>
-                <button className="map-pin" aria-label="Detalhes da unidade G7 Scooters" aria-expanded={showDetails} aria-controls="store-details" onClick={() => setShowDetails(!showDetails)}>
-                  <img src={config.logo} width="44" height="44" alt="" />
-                </button>
-                <div className="store-details" id="store-details" hidden={!showDetails}>
-                  <strong>{config.name}</strong>
-                  <span>{store.street}</span>
-                  <span>{store.city}</span>
-                </div>
-                {!store.facade && <a className="attribution" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>}
-              </>}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function Testimonials() {
   const videos = config.testimonials;
   const [current, setCurrent] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
+  const [openedFolder, setOpenedFolder] = useState<number | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const player = useRef<HTMLVideoElement>(null);
   const origin = useRef<HTMLButtonElement>(null);
-  const touchStart = useRef<number | null>(null);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
   const active = current === null ? undefined : videos[current];
 
   function select(index: number) {
@@ -100,13 +46,20 @@ function Testimonials() {
       ) : (
         <div className="folders">
           {videos.map((item, index) => (
-            <button className="folder" key={item.video} onClick={(event) => {
+            <button className="folder" key={item.video} data-open={openedFolder === index} aria-haspopup="dialog" style={{ '--folder-index': index } as CSSProperties} onClick={(event) => {
               origin.current = event.currentTarget;
+              setOpenedFolder(index);
               select(index);
               dialog.current?.showModal();
             }}>
-              <img src={item.poster} alt="" loading="lazy" />
-              <span><Play size={18} /> {item.title}</span>
+              <span className="folder-back" aria-hidden="true" />
+              <span className="folder-covers" aria-hidden="true">
+                {[-1, 0, 1].map((slot) => <img
+                  key={slot} src={item.poster} alt="" loading="lazy"
+                  style={{ '--slot': slot } as CSSProperties}
+                />)}
+              </span>
+              <span className="folder-glass"><Play size={18} /> {item.title}</span>
             </button>
           ))}
         </div>
@@ -114,18 +67,21 @@ function Testimonials() {
       <dialog ref={dialog} aria-label="Depoimento em vídeo" onClose={() => {
         player.current?.pause();
         setCurrent(null);
-        origin.current?.focus();
+        setOpenedFolder(null);
+        origin.current?.focus({ preventScroll: true });
       }}>
         <div className="story-header">
           <h3>{active?.title}</h3>
           <button className="icon-button" onClick={() => dialog.current?.close()} aria-label="Fechar vídeo" autoFocus><X /></button>
         </div>
-        {active && <div className="player" onTouchStart={(event) => { touchStart.current = event.touches[0]?.clientX ?? null; }}
-          onTouchEnd={(event) => {
+        {active && <div className="player" onTouchStart={(event) => { const touch = event.touches[0]; touchStart.current = touch ? { x: touch.clientX, y: touch.clientY } : null; }}
+          onTouchCancel={() => { touchStart.current = null; }} onTouchEnd={(event) => {
             if (touchStart.current === null) return;
-            const delta = event.changedTouches[0].clientX - touchStart.current;
+            const touch = event.changedTouches[0];
+            const delta = touch.clientX - touchStart.current.x;
+            const vertical = touch.clientY - touchStart.current.y;
             touchStart.current = null;
-            if (Math.abs(delta) > 65) navigate(delta < 0 ? 1 : -1);
+            if (Math.abs(delta) > 65 && Math.abs(delta) > Math.abs(vertical)) navigate(delta < 0 ? 1 : -1);
           }}>
           <video key={active.video} ref={player} src={active.video} poster={active.poster} controls autoPlay playsInline
             onTimeUpdate={(event) => {
@@ -159,6 +115,7 @@ function App() {
       <main>
         <section className="hero" aria-labelledby="hero-title">
           <div className="hero-grid" aria-hidden="true" />
+          <div className="hero-light" aria-hidden="true" />
           <div className="hero-stage">
             <div className="arch">
               <div className="light" />
@@ -172,6 +129,7 @@ function App() {
           <a className="scroll-link" href="#links" aria-label="Ver links da G7"><ChevronDown size={19} /></a>
         </section>
         <section id="links" className="links-section" aria-labelledby="links-title">
+          <div className="curtain" aria-hidden="true" />
           <div className="wrap">
             <div className="links-heading">
               <p className="kicker"><Zap size={15} /> Links da G7</p>
