@@ -39,48 +39,50 @@ export function Location() {
           <p className="hours"><Clock3 size={17} /> <span>{store.weekdays}<br />{store.saturday}</span></p>
           <a className="directions" href={store.directions} target="_blank" rel="noreferrer"><Navigation size={17} /> Como chegar</a>
         </div>
-        <div className="map-shell" data-expanded={expanded}>
-          <div className="map-top">
-            <span><MapPin size={15} /> Cedral, SP</span>
-            <button type="button" aria-expanded={expanded} aria-controls="map-scene" onClick={() => {
-              if (expanded) {
-                setDetails(false);
-                setInteractive(false);
+        <div className="location-panel">
+          <div className="map-shell" data-expanded={expanded}>
+            <div className="map-top">
+              <span><MapPin size={15} /> Cedral, SP</span>
+              <button type="button" aria-expanded={expanded} aria-controls="map-scene" onClick={() => {
+                if (expanded) {
+                  setDetails(false);
+                  setInteractive(false);
+                  resetPointer();
+                }
+                setExpanded(!expanded);
+              }}>{expanded ? <><Minimize2 size={15} /> Recolher</> : <><Expand size={15} /> Expandir mapa</>}</button>
+            </div>
+            <div className="map-scene" id="map-scene" ref={board} onPointerMove={move} onPointerLeave={resetPointer}>
+              {interactive ? (
+                <iframe title="G7 Scooters no Google Maps" src={store.embed} loading="lazy" allowFullScreen referrerPolicy="no-referrer-when-downgrade" />
+              ) : (
+                <m.div className="map-plane" style={reduce ? undefined : { rotateX, rotateY }}>
+                  <div className="map-surface" aria-hidden="true">
+                    <img src={store.facade || store.mapImage} width="760" height="390" loading="lazy" draggable="false" alt="" />
+                  </div>
+                  <div className="map-shade" aria-hidden="true" />
+                  <button className="map-pin" aria-label="Detalhes da unidade G7 Scooters" aria-expanded={details} aria-controls="store-details" onClick={() => setDetails(!details)}>
+                    <img src={config.logo} width="44" height="44" alt="" />
+                    <span aria-hidden="true">G7 Scooters</span>
+                  </button>
+                  <div className="store-details" id="store-details" hidden={!details}>
+                    <strong>{config.name}</strong>
+                    <span>{store.street}</span>
+                    <span>{store.city}</span>
+                  </div>
+                </m.div>
+              )}
+              {!interactive && !store.facade && <a className="attribution" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>}
+            </div>
+            {expanded && <div className="map-actions">
+              <a href={store.listing} target="_blank" rel="noreferrer">Ver loja no Google Maps</a>
+              <button type="button" aria-pressed={interactive} onClick={() => {
                 resetPointer();
-              }
-              setExpanded(!expanded);
-            }}>{expanded ? <><Minimize2 size={15} /> Recolher</> : <><Expand size={15} /> Expandir mapa</>}</button>
+                setDetails(false);
+                setInteractive(!interactive);
+              }}>{interactive ? 'Voltar à vista da loja' : 'Abrir mapa interativo'}</button>
+            </div>}
           </div>
-          <div className="map-scene" id="map-scene" ref={board} onPointerMove={move} onPointerLeave={resetPointer}>
-            {interactive ? (
-              <iframe title="G7 Scooters no Google Maps" src={store.embed} loading="lazy" allowFullScreen referrerPolicy="no-referrer-when-downgrade" />
-            ) : (
-              <m.div className="map-plane" style={reduce ? undefined : { rotateX, rotateY }}>
-                <div className="map-surface" aria-hidden="true">
-                  <img src={store.facade || store.mapImage} width="760" height="390" loading="lazy" draggable="false" alt="" />
-                </div>
-                <div className="map-shade" aria-hidden="true" />
-                <button className="map-pin" aria-label="Detalhes da unidade G7 Scooters" aria-expanded={details} aria-controls="store-details" onClick={() => setDetails(!details)}>
-                  <img src={config.logo} width="44" height="44" alt="" />
-                  <span aria-hidden="true">G7 Scooters</span>
-                </button>
-                <div className="store-details" id="store-details" hidden={!details}>
-                  <strong>{config.name}</strong>
-                  <span>{store.street}</span>
-                  <span>{store.city}</span>
-                </div>
-              </m.div>
-            )}
-            {!interactive && !store.facade && <a className="attribution" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>}
-          </div>
-          {expanded && <div className="map-actions">
-            <a href={store.listing} target="_blank" rel="noreferrer">Ver loja no Google Maps</a>
-            <button type="button" aria-pressed={interactive} onClick={() => {
-              resetPointer();
-              setDetails(false);
-              setInteractive(!interactive);
-            }}>{interactive ? 'Voltar à vista da loja' : 'Abrir mapa interativo'}</button>
-          </div>}
         </div>
       </div>
     </section>

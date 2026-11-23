@@ -89,17 +89,22 @@ address{font-style:normal;line-height:1.5;color:var(--muted)}
 .store-details{position:absolute;top:calc(50% + 11px);left:50%;transform:translateX(-50%);width:min(240px,88%);padding:10px 12px;border-radius:12px;background:#101b13;border:1px solid #90b469;color:#fff;text-align:center;box-shadow:0 6px 19px #0008;z-index:2}
 .store-details span{display:block;font-size:.875rem}
 .attribution{position:absolute;bottom:0;right:0;background:#102019;color:#e1ebde;font-size:.75rem;padding:5px 7px}
-.brand-strip{overflow:hidden;border-block:1px solid #ffffff20;background:#111813;padding:13px 0;mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.brand-strip{overflow:hidden;border-block:1px solid #ffffff20;background:#111813;padding:9px 0;mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
 .brand-track,.brand-group{display:flex;width:max-content;flex-shrink:0}
-.brand-track{animation:marquee 65s linear infinite}
-.brand-group img{margin-inline:29px;opacity:.7}
+.brand-track{animation:marquee 71s linear infinite;will-change:transform}
+.brand-group img{flex:none;width:62px;height:62px;margin-inline:25px;object-fit:contain}
 @keyframes marquee{to{transform:translateX(-50%)}}
 .testimonials{padding-top:54px;padding-bottom:60px}
 .empty-story{display:flex;align-items:center;gap:15px;margin-top:22px;padding:16px;border-radius:16px;border:1px solid var(--border);background:#151b17}
 .empty-icon{color:var(--lime);background:#29351d;border-radius:13px;width:48px;height:48px;display:grid;place-items:center;flex:none}
 .empty-story h3{font-size:1.05rem;margin-bottom:3px}
 .empty-story p{color:var(--muted)}
-.folders{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:24px;margin-top:42px}
+.folders{--folder-step:min(24vw,230px);--folder-drag:0px;position:relative;isolation:isolate;height:292px;margin-top:12px;overflow:hidden;touch-action:pan-y;user-select:none;perspective:1000px}
+.folders .folder{position:absolute;top:42px;left:50%;width:min(64%,295px);height:226px;z-index:calc(4 - var(--slot-depth));transform:translateX(calc(-50% + var(--slot-distance) * var(--folder-step) + var(--folder-drag))) translateY(calc(var(--slot-depth) * 13px)) translateZ(calc(var(--slot-depth) * -70px)) rotateY(calc(var(--slot-distance) * -19deg)) rotateZ(calc(var(--slot-distance) * 5deg));opacity:calc(1 - var(--slot-depth) * .17);transition:transform .4s cubic-bezier(.22,.7,.2,1),opacity .35s,visibility .35s}
+.folders[data-dragging=true] .folder{transition:none;cursor:grabbing}
+.folders .folder[data-offstage=true]{visibility:hidden;opacity:0;pointer-events:none}
+.carousel-controls{width:min(100%,295px);margin-inline:auto}
+@media(max-width:600px){.folders{--folder-step:54vw;height:263px}.folders .folder{top:38px;height:204px;width:min(66%,245px)}}
 .folder{--lift:0px;--spread:8px;--fan:3deg;--hinge:0deg;position:relative;isolation:isolate;min-width:0;height:216px;border:0;background:none;padding:0;text-align:left}
 .folder:hover,.folder:focus-visible{--lift:-21px;--spread:23px;--fan:11deg;--hinge:13deg}
 .folder[data-open=true]{--lift:-36px;--spread:33px;--fan:16deg;--hinge:22deg}
@@ -125,23 +130,8 @@ dialog::backdrop{background:#000b}
 .footer{border-top:1px solid var(--border);color:var(--muted);display:flex;align-items:center;gap:12px;padding-block:15px 20px;font-size:.875rem}
 .footer a{margin-left:auto}
 .hero-light{position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse 31% 51% at 52% 54%,#adff2b22,transparent 85%);pointer-events:none}
-.curtain{position:absolute;inset:0 0 auto;height:25px;border-radius:inherit;transform-origin:top;background:linear-gradient(#a0d16829,transparent);pointer-events:none}
 .location-layout{position:relative}
 .location-light{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 66% 40%,#a6e54719,transparent 70%)}
-@supports (animation-timeline:view()){
-  .links-heading,.cards{animation:reveal linear both;animation-timeline:view();animation-range:entry 0% entry 65%}
-  .hero-stage{animation:recede linear both;animation-timeline:view();animation-range:exit 4% exit 90%}
- .hero-light{animation:retreat linear both;animation-timeline:view();animation-range:exit 3% exit 90%}
-  .curtain{animation:curtain linear both;animation-timeline:view();animation-range:entry 0% entry 85%}
-  .location-light,.location::before{animation:line-in linear both;animation-timeline:view();animation-range:entry 0% entry 48%}
-  .folder{animation:folder-in linear both;animation-timeline:view();animation-range:entry calc(var(--folder-index)*2%) entry calc(60% + var(--folder-index)*2%)}
-}
-@keyframes reveal{from{transform:translateY(20px);opacity:.65}}
-@keyframes recede{to{transform:translateY(-26px) scale(.94)}}
-@keyframes retreat{to{transform:translateY(-64px);opacity:.15}}
-@keyframes curtain{from{transform:scaleY(.15);opacity:0}to{transform:scaleY(1);opacity:1}}
-@keyframes line-in{from{opacity:0;transform:translateY(18px)}}
-@keyframes folder-in{from{opacity:.35;translate:0 18px}}
 @media(max-width:850px){
   .wrap{width:calc(100% - 52px)}
   .hero-stage{height:520px}
@@ -173,7 +163,7 @@ dialog::backdrop{background:#000b}
   .location{padding:38px 0}
   .location-layout{grid-template-columns:1fr;gap:22px}
   .location h2{margin-bottom:15px}
-  .brand-group img{width:39px;height:39px;margin-inline:21px}
+  .brand-group img{width:56px;height:56px;margin-inline:18px}
   .testimonials{padding-block:37px 44px}
 }
 @media(prefers-reduced-motion:reduce){
@@ -229,4 +219,19 @@ dialog::backdrop{background:#000b}
   .action-card{min-height:255px;grid-template-rows:minmax(160px,1fr) auto}
   .card-copy{padding:11px 16px 14px}
   .action-card .card-art img{height:94%;top:4%}
+}
+
+@media(prefers-reduced-motion:no-preference){
+  main[data-scroll-scenes]{isolation:isolate}
+  main[data-scroll-scenes] .hero{z-index:2;clip-path:inset(0 0 var(--curtain-cut,0px))}
+  main[data-scroll-scenes] .hero:has(:focus-visible){clip-path:none}
+  main[data-scroll-scenes] .links-section{margin-top:calc(-1 * var(--curtain-overlap,0px));z-index:1}
+  main[data-scroll-scenes]:has(.links-section :focus-visible) .hero{clip-path:inset(0 0 var(--curtain-overlap,0px))}
+  main[data-scroll-scenes] .location{overflow:clip}
+  main[data-scroll-scenes] .map-shell{transform:translateY(var(--panel-offset,0px))}
+}
+@media(prefers-reduced-motion:reduce){
+  .brand-track{will-change:auto}
+  .folders .folder{transform:translateX(calc(-50% + var(--slot-distance) * var(--folder-step) + var(--folder-drag)));opacity:1}
+  .folders .folder[data-offstage=true]{opacity:0}
 }
