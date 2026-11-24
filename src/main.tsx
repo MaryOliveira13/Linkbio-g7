@@ -186,13 +186,7 @@ function App() {
   return (
     <>
       <a className="skip" href="#links">Ir para os links</a>
-      <header className="topbar wrap" id="inicio">
-        <a className="brand" href="#inicio" aria-label="G7 Scooters, início"><img src={config.logo} width="55" height="55" alt="" /></a>
-        <nav aria-label="Navegação principal">
-          <a href="#links">Links</a><a href="#localizacao">Localização</a>
-        </nav>
-      </header>
-      <main ref={main}>
+      <main ref={main} id="inicio">
         <Opening />
         <section id="links" className="links-section" aria-labelledby="links-title">
           <div className="wrap">
