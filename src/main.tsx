@@ -1,8 +1,9 @@
 import { useRef, useState, type CSSProperties, type PointerEvent } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight, MessageCircle, Play, Video, X } from 'lucide-react';
+import { ArrowUpRight, ChevronLeft, ChevronRight, MessageCircle, Play, Video, X } from 'lucide-react';
 import { config, whatsappLink } from './config';
 import { Location } from './expanded-map';
+import { Opening } from './opening';
 import { useScrollScenes } from './scroll-scenes';
 import './style.css';
 
@@ -192,21 +193,7 @@ function App() {
         </nav>
       </header>
       <main ref={main}>
-        <section className="hero" aria-labelledby="hero-title">
-          <div className="hero-grid" aria-hidden="true" />
-          <div className="hero-light" aria-hidden="true" />
-          <div className="hero-stage">
-            <div className="arch">
-              <div className="light" />
-              <img className="hero-scooter" src={config.hero} width="317" height="480" alt="Scooter elétrica branca do catálogo G7, vista em três quartos" fetchPriority="high" />
-            </div>
-            <div className="hero-copy">
-              <h1 id="hero-title"><span>G7</span> <em>Scooters</em></h1>
-              <p>Scooters elétricas em Cedral, SP</p>
-            </div>
-          </div>
-          <a className="scroll-link" href="#links" aria-label="Ver links da G7"><ChevronDown size={19} /></a>
-        </section>
+        <Opening />
         <section id="links" className="links-section" aria-labelledby="links-title">
           <div className="wrap">
             <div className="links-heading">

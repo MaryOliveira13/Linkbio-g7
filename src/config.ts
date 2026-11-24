@@ -15,7 +15,10 @@ export function whatsappLink(message: string) {
 export const config = {
   name: 'G7 Scooters',
   logo: '/media/g7.webp',
-  hero: '/media/scooter-hero.webp',
+  opening: {
+    video: '/media/g7-opening.mp4',
+    finalFrame: '/media/g7-opening-final.webp',
+  },
   catalog: 'https://g7scooters.vercel.app/',
   workshop: '',
   maintenanceMessage: 'Olá! Vim pelo link da bio da G7 Scooters e gostaria de consultar conserto ou manutenção para minha scooter elétrica.',
