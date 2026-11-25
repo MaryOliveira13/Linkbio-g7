@@ -1,59 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
-import { ChevronDown } from 'lucide-react';
 import { config } from './config';
 
 export function Opening() {
-  const video = useRef<HTMLVideoElement>(null);
-  const [playing, setPlaying] = useState(false);
-
-  useEffect(() => {
-    const element = video.current;
-    const preference = matchMedia('(prefers-reduced-motion: reduce)');
-    if (!element || preference.matches) return;
-
-    let finished = false;
-    function showVideo() {
-      if (!finished) setPlaying(true);
-    }
-    function showFinalFrame() {
-      finished = true;
-      setPlaying(false);
-    }
-    function onPreferenceChange(event: MediaQueryListEvent) {
-      if (!event.matches) return;
-      element?.pause();
-      showFinalFrame();
-    }
-
-    element.addEventListener('playing', showVideo);
-    element.addEventListener('ended', showFinalFrame);
-    element.addEventListener('error', showFinalFrame);
-    preference.addEventListener('change', onPreferenceChange);
-    element.muted = true;
-    element.src = config.opening.video;
-    void element.play().catch(() => {
-      if (!finished) showFinalFrame();
-    });
-
-    return () => {
-      finished = true;
-      element.pause();
-      element.removeEventListener('playing', showVideo);
-      element.removeEventListener('ended', showFinalFrame);
-      element.removeEventListener('error', showFinalFrame);
-      preference.removeEventListener('change', onPreferenceChange);
-    };
-  }, []);
-
   return (
     <section className="hero" aria-labelledby="hero-title">
       <div className="hero-frame">
-        <img className="hero-media" src={config.opening.finalFrame} width="720" height="1280" alt="" fetchPriority="high" />
-        <video ref={video} className="hero-media hero-video" data-playing={playing} muted playsInline aria-hidden="true" />
-        <h1 className="hero-logo" id="hero-title"><img src={config.logo} width="300" height="300" alt={config.name} /></h1>
+        <img className="hero-media" src={config.opening.image} srcSet="/media/g7-opening-store-small.webp 640w, /media/g7-opening-store-light.webp 1080w" sizes="(max-width: 500px) 100vw, 500px" width="1080" height="800" alt="Scooters em frente à loja G7 Scooters" fetchPriority="high" />
       </div>
-      <p>Scooters elétricas em Cedral, SP</p>
-      <a className="scroll-link" href="#links" aria-label="Ver links da G7"><ChevronDown size={19} /></a>
+      <div className="hero-brand">
+        <img className="hero-logo" src="/media/g7-hero-logo.webp" width="300" height="297" alt={config.name} />
+        <h1 id="hero-title">GRUPO 7</h1>
+        <p>A família que mais cresce!</p>
+      </div>
     </section>
   );
 }

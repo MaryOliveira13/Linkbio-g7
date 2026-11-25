@@ -16,8 +16,7 @@ export const config = {
   name: 'G7 Scooters',
   logo: '/media/g7.webp',
   opening: {
-    video: '/media/g7-opening.mp4',
-    finalFrame: '/media/g7-opening-final.webp',
+    image: '/media/g7-opening-store-light.webp',
   },
   catalog: 'https://g7scooters.vercel.app/',
   workshop: '',
