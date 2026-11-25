@@ -5,14 +5,17 @@ export function useArrival() {
     const preference = matchMedia('(prefers-reduced-motion: reduce)');
     const elements = Array.from(document.querySelectorAll<HTMLElement>([
       '.hero-media', '.hero-brand > *', '.bio-banner',
-      '.g7-location__heading > *', '.g7-location__brand', '.g7-location__details', '.g7-location__button',
+      '.g7-location__heading > *', '.g7-location__card',
       '.brand-strip', '.testimonial-heading > *', '.video-fan-stage', '.fan-navigation', '.fan-instagram', '.footer > *'
     ].join(',')));
     if (!('IntersectionObserver' in window) || preference.matches) return;
     const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
+      let bannerOrder = 0;
+      entries.sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top).forEach(entry => {
         if (!entry.isIntersecting) return;
-        entry.target.classList.add('arrival-visible');
+        const el=entry.target as HTMLElement;
+        if(el.matches('.bio-banner'))el.style.transitionDelay=`${bannerOrder++ * 170}ms`;
+        el.classList.add('arrival-visible');
         observer.unobserve(entry.target);
       });
     }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });

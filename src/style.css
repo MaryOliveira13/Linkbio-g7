@@ -217,8 +217,8 @@ dialog::backdrop{background:#000b}
 .footer a:hover{color:#446c13}
 
 @media(prefers-reduced-motion:no-preference){
-.arrival{opacity:0;filter:blur(9px);translate:0 24px;transition:opacity .75s ease,filter .85s ease,translate .85s cubic-bezier(.2,.7,.2,1)}
-.arrival.bio-banner,.arrival.g7-location__button,.arrival.fan-instagram{filter:blur(12px);translate:0 30px}
+.arrival{opacity:0;filter:none;translate:0 24px;transition:opacity .75s ease,filter .85s ease,translate .85s cubic-bezier(.2,.7,.2,1)}
+.arrival.bio-banner,.arrival.g7-location__card,.arrival.video-fan-stage,.arrival.hero-media{filter:blur(8px);translate:0 24px}
 .arrival.arrival-visible{opacity:1;filter:blur(0);translate:0 0}
 .hero-brand h1.arrival{transition-delay:.08s}.hero-brand p.arrival{transition-delay:.16s}
 .arrival:focus-within{opacity:1;filter:none;translate:0 0}
@@ -227,3 +227,6 @@ dialog::backdrop{background:#000b}
 .footer .footer-logo{margin-left:0;flex-shrink:0}
 
 .video-fan-stage{cursor:grab;user-select:none;-webkit-user-select:none}.video-fan-stage:active{cursor:grabbing}.video-fan-card video,.fan-select{cursor:inherit}
+
+.fan-sound-toggle{min-width:44px;min-height:44px;touch-action:manipulation}.fan-navigation button,.bio-banner,.fan-instagram{touch-action:manipulation}.video-fan-stage{height:auto;aspect-ratio:1 / 1.05;min-height:0}.fan-dots button{width:18px;height:36px}
+.video-fan-stage{pointer-events:none}.video-fan-card[data-active=true],.fan-sound-toggle{pointer-events:auto}.arrival.arrival-visible{filter:none}
